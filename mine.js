@@ -1,169 +1,14 @@
-
-//const opciones = ['a','b','c','d','e','A','B','C','D','E'];
-
-//const opcionesServicios = ['a','b','c','A','B','C'];
-
 let arrayHisorial = [];
-
 let arrayHisorialBanco = [];
 
 let saldoBanco = Number(7000);
-let deudaLuz = Number(6000);
-let deudaGas = Number(7000);
-let deudaInt = Number(8000);
 
 const servicios = [
-    {servicio: 'Luz', monto: deudaLuz},
-    {servicio: 'Gas', monto: deudaGas},
-    {servicio: 'Internet', monto: deudaInt}
+    {servicio: 'Luz', monto: 6000},
+    {servicio: 'Gas', monto: 7000},
+    {servicio: 'Internet', monto: 8000},
 ];
 
-
-// let accion = prompt(`Seleccione la opciones que desea realiza.
-// Opciones:
-//     A) Pagar la Luz
-//     B) Pagar el gas
-//     C) Pagar internet
-//     D) Consultar Mis fondos
-//     E) Historial de pagos (consola)`);
-
-// const getAccion = () =>{
-
-//     while (!opciones.includes(accion)) {
-//     accion = prompt(`Seleccione la opciones que desea realizar.
-//     Opciones:
-//         A) Pagar la Luz
-//         B) Pagar el gas
-//         C) Pagar internet
-//         D) Consultar Mis fondos 
-//         E) Historial de pagos (consola)`);
-//     }   
-
-//     switch (accion) {
-//         case 'a'||'A':
-//             pagar(deudaLuz,'Luz');
-//             accion = '';
-//             break;
-
-//         case 'b'||'B':
-//             pagar(deudaGas,'Gas');
-//             accion = '';
-//             break;
-
-//         case 'c'||'C':
-//             pagar(deudaInt,'Internet');
-//             accion = '';
-//             break;
-
-//         case 'd'||'D':
-//             consultarSaldo();
-//             accion = '';
-//             break;
-
-//         case 'e'||'E':
-//             historial(); 
-//             accion = '';
-//             break;
-
-//         default:
-//             window.location.reload(); 
-//             accion = '';
-//             break;
-//     }
-// }
-
-// const pagar = (deuda,servicio) =>{
-
-//     accion = '';
-
-//     if (deuda > 0) {
-//         let accionServicio = prompt(`Su deuda de ${servicio} actual es de ${deuda}.
-//         Opciones:
-//             A) Pago total
-//             B) Pago parcial
-//             C) Volver al inicio`);
-
-//         while (!opcionesServicios.includes(accionServicio)) {
-//             accionServicio = prompt(`No es una opcion valida, Selecciona una valida.
-//             Opciones:
-//                 A) Pago total
-//                 B) Pago parcial
-//                 C) Volver al inicio`);
-//         } 
-
-//         switch (accionServicio) {
-//             case 'a'||'A':
-//                 accionServicio = '';
-//                 pagoTotal(deuda,servicio);
-//                 break;
-
-//             case 'b'||'B':
-//                 accionServicio = '';
-//                 let montoParcial = Number(prompt(`Su deuda actual es de ${deuda} ingrese el monto a pagar`));
-//                 pagoParcial(montoParcial,servicio);
-//                 break;
-
-//             case 'c'||'C':
-//                 accionServicio = '';
-//                 getAccion();
-//                 break;
-
-//             default:
-//                 window.location.reload(); 
-//                 break;
-//         }
-
-//     } else {
-//         alert(`No registra deudas de ${servicio}`)
-//         accionServicio = '';
-//         getAccion();
-//     }
-// }
-
-// const consultarSaldo = () =>{
-
-//     if (confirm(`Su saldo actual es de ${saldoBanco}, desea ingresar mas dinero ?`) == true) {
-//         saldoBanco += Number(prompt(`Ingrese el monto a depositar`));
-//         alert(`Saldo actual: ${saldoBanco} `);
-//         accion = '';
-//         getAccion();
-//     } else {
-//         accion = '';
-//         getAccion();
-//     }
-
-// }
-
-// const pagoTotal = (saldo,servicio) =>{
-
-
-//     let padre =  document.getElementById(`${servicio}`);
-//     let hijo = padre.firstElementChild.firstElementChild.firstElementChild.firstElementChild.firstElementChild.firstElementChild.nextElementSibling;
-
-//     if ((saldoBanco - saldo) < 0) {
-//         alert(`Saldo inuficiente le faltan ${saldo - saldoBanco } para ralizar la accion`);
-//         arrayHisorial.push({servicio: 'luz', monto: 0, fecha:'hoy', pago:'fallido'});
-//         //getAccion();
-//     } else {
-
-//         saldoBanco = saldoBanco - saldo;
-//         if (servicio =='Luz') {
-//             deudaLuz = 0;
-//             hijo.textContent = `Total a pagar $ ${deudaLuz}`
-//         } else if(servicio =='Gas') {
-//             deudaGas = 0;
-//             hijo.textContent = `Total a pagar $ ${deudaGas}`
-//         }else{
-//             deudaInt = 0;
-//             hijo.textContent = `Total a pagar $ ${deudaInt}`
-//         }
-
-//         alert(`operacion exitosa fondos actuales ${saldoBanco}`);
-//         arrayHisorial.push({servicio: servicio, monto: saldo, fecha:'hoy', pago:'total'});
-//         //getAccion();
-//     }
-
-// }
 const banco = (operacion,saldo) =>{
 
     let saldoDisponible = document.querySelector("#banco-modal");
@@ -171,106 +16,98 @@ const banco = (operacion,saldo) =>{
     if (operacion == "Deposito") {
 
         saldoBanco = saldoBanco + Number(saldo);
-        saldoDisponible.textContent =`Saldo disponible: ${saldoBanco} ( Operacion exitosa )`;
+        saldoDisponible.textContent =`Saldo disponible: ${saldoBanco}`;
+        toast("Operacion Exitosa","00b09b","96c93d");
         arrayHisorialBanco.push({operacion: operacion, monto: saldo, fecha:'hoy', estado:'ok'});
-        actualizarValores("banco",0);
+        actualizarValores("banco");
 
     } else {
 
         if ((saldoBanco - Number(saldo)) < 0) {
 
-            saldoDisponible.textContent =`Saldo disponible: ${saldoBanco} ( Saldo insuficiente )`;
+            saldoDisponible.textContent =`Saldo disponible: ${saldoBanco}`;
+            toast("Saldo insuficiente","E8271A","C22115");
             arrayHisorialBanco.push({operacion: operacion, monto: saldo, fecha:'hoy', estado:'ok'});
 
         }else{
 
             saldoBanco = saldoBanco - saldo;
-            saldoDisponible.textContent =`Saldo disponible: ${saldoBanco} ( Operacion exitosa )`;
+            saldoDisponible.textContent =`Saldo disponible: ${saldoBanco}`;
+            toast("Operacion Exitosa","00b09b","96c93d");
             arrayHisorialBanco.push({operacion: operacion, monto: saldo, fecha:'hoy', estado:'ok'});
-            actualizarValores("banco",0);
+            actualizarValores("banco");
         }        
     }
 }
 
 
-const pagar = (servicio,pago) =>{
+const pagar = (servicioName,pago) =>{
+
+    let results = servicios.filter(function (servicio) { return servicio.servicio == servicioName });
+    let result = results.length > 0 ? results[0] : null;
 
     let deudaModal = document.querySelector("#deuda-modal");
     let pagoModal = document.querySelector("#pago-modal");
-    let deuda = 0;
-
-    if (servicio =='Luz') {
-
-        deuda = deudaLuz;
-
-    } else if(servicio =='Gas') {
-
-        deuda = deudaGas;
-
-    }else{
-
-        deuda = deudaInt;
-    }
 
     if ((saldoBanco - pago) < 0) {
 
-        deudaModal.textContent =`Total a pagar: ${deuda} ( Saldo insuficiente )`;
-        arrayHisorial.push({servicio: servicio, monto: 0, fecha:'hoy', pago:'fallido'});
+        deudaModal.textContent = `Total a pagar: ${result.monto} ( su pago puede ser parcial )`;
+        toast("Saldo insuficiente","E8271A","C22115");
+        arrayHisorial.push({servicio: servicioName, monto: 0, fecha:'hoy', pago:'fallido'});
 
-    }else if(deuda == 0){
+    }else if(result.monto <= 0){
 
-        deudaModal.textContent =`Total a pagar: ${deuda} ( No registra deuda )`;
+        deudaModal.textContent = Math.sign(result.monto) == -1 ? `Saldo a favor: ${result.monto * -1}` : `Total a pagar: ${result.monto} ( su pago puede ser parcial )`;
+        toast("No registra deuda","1F27C2","2630F4");
 
     } else {
 
         saldoBanco = saldoBanco - pago;
-       
-         if (servicio =='Luz') {
-
-            deudaLuz = deudaLuz - pago;
-            deuda = deudaLuz;
-
-         } else if(servicio =='Gas') {
-
-            deudaGas = deudaGas - pago;
-            deuda = deudaGas;
-
-         }else{
-
-            deudaInt = deudaInt - pago;
-            deuda = deudaInt;
-         }
-
-        deudaModal.textContent =`Total a pagar: ${deuda} ( Operacion exitosa )`
-        pagoModal.value = deuda;
-
-        arrayHisorial.push({servicio: servicio, monto: pago, fecha:'hoy', pago:'ok'});
-
-        actualizarValores(servicio,deuda);
+        result.monto = result.monto - pago;
+        deudaModal.textContent = Math.sign(result.monto) == -1 ? `Saldo a favor: ${result.monto * -1}` : `Total a pagar: ${result.monto} ( su pago puede ser parcial )`;
+        toast("Operacion Exitosa","00b09b","96c93d");
+        pagoModal.value = Math.sign(result.monto) == -1 ? 0 : result.monto;
+        arrayHisorial.push({servicio: servicioName, monto: pago, fecha:'hoy', pago:'ok'});
+        actualizarValores(servicioName);
     }
 }
 
-const actualizarValores = (servicio,deuda) =>{
+const actualizarValores = (servicioName,servicioName2) =>{
 
-        if (servicio != "banco") {
-            let svci =  document.getElementById(`${servicio}`);
+    let results = servicios.filter(function (servicio) { return servicio.servicio == servicioName });
+    let result = (results.length > 0) ? results[0] : null;
+
+    servicioName2 ?  boxServicio = servicioName2 : boxServicio = servicioName;
+    
+        if (boxServicio != "banco") {
+            let svci =  document.getElementById(boxServicio);
             let servicioActualizar = svci.firstElementChild.firstElementChild.firstElementChild.firstElementChild.firstElementChild.firstElementChild.nextElementSibling;
-            //console.log(padre.children[1]);
-            servicioActualizar.textContent = `Total a pagar $ ${deuda}`
+            let servicioActualizarName = svci.firstElementChild.firstElementChild.firstElementChild.firstElementChild.firstElementChild.firstElementChild;
+            let servicioActualizarBtn = svci.firstElementChild.firstElementChild.firstElementChild.firstElementChild.firstElementChild.firstElementChild.nextElementSibling.nextElementSibling.firstElementChild.firstElementChild;
+
+            servicioActualizar.textContent = (Math.sign(result.monto) == -1)? `Saldo a favor: ${result.monto * -1}` : `Total a pagar: ${result.monto}`;
+            servicioActualizarName.textContent = `Resumen de la cuenta de ${result.servicio}.`;
+            servicioActualizarBtn.name = `${result.servicio}`;
+            svci.id = `${result.servicio}`;
         }
 
-        let banco =  document.getElementById(`banco`);
+        let banco =  document.getElementById('banco');
         let bancoActualizar = banco.firstElementChild.firstElementChild.firstElementChild.firstElementChild.firstElementChild.firstElementChild.firstElementChild.firstElementChild.nextElementSibling;
-        bancoActualizar.textContent = `Saldo disponible $ ${saldoBanco}`
+        bancoActualizar.textContent = `Saldo disponible $ ${saldoBanco}`;
 }
 
 const historial = (servicio) =>{
-    let divH = document.getElementById("historial-modal")
+
+    let divH = document.getElementById("historial-modal");
+    let registros = divH.children;
+
+    registros.length > 0 && (divH.innerHTML = '');
+
     arrayHisorial.forEach(element => {
 
         if (servicio == element.servicio) {
+
             let contenedor = document.createElement("p")
-            //console.log(`pago de ${element.servicio} por ${element.monto} el dia de ${element.fecha} el pago fue ${element.pago} `);
             contenedor.innerHTML = `pago de ${element.servicio} por ${element.monto} el dia de ${element.fecha} el pago fue ${element.pago}`
             divH.appendChild(contenedor);
           }
@@ -279,12 +116,30 @@ const historial = (servicio) =>{
     $("#modalHistorial").modal();
 }
 
-let divServicios = document.getElementById("servicios")
+const editarServicio = (servicioName) =>{
+
+    let results = servicios.filter(function (servicio) { return servicio.servicio == servicioName });
+    let result = results.length > 0 ? results[0] : null;
+    let oldName = result.servicio;
+    let newName = document.getElementById("edit-nombre").value;
+    let newDeuda = document.getElementById("edit-saldo").value;
+    
+    result.monto = newDeuda;
+    result.servicio = newName;
+
+    toast("Servicio Editado","00b09b","96c93d");
+    $('#cerrar-edit').click();
+    actualizarValores(newName,oldName);
+}
+
+
+let divServicios = document.getElementById("servicios");
 servicios.forEach(servicio => {
-    let contenedor = document.createElement("div")
-    contenedor.classList.add('col');
+    let contenedor = document.createElement("div");
+    contenedor.classList.add('col-4');
+    contenedor.style = "margin-bottom: 1vw;";
     contenedor.innerHTML = 
-    `<div id="${servicio.servicio}" class="album py-5 bg-light">
+    `<div id="${servicio.servicio}" class="album py-5 bg-light border border-primary">
         <div class="container-fluid">
             <div class="row row-cols-12 row-cols-sm-12 row-cols-md-12 g-12">
                 <div class="col animacion">
@@ -292,13 +147,14 @@ servicios.forEach(servicio => {
                         <div class="card-body">
                             <p class="card-text">Resumen de la cuenta de ${servicio.servicio}.</p>
                             <small class="text-muted">Total a pagar $ ${servicio.monto}</small>
-                            <div class="d-flex justify-content-between align-items-center">
-                                <div class="btn-group">
-                                    <button id="btn_${servicio.servicio}" type="button" class="btn btn-info btn-outline-secondary">
-                                        Pagar 
-                                    </button>
-                                    <button id="btn_${servicio.servicio}_historial" type="button" class="btn btn-sm btn-outline-secondary"> 
-                                        Historal de pagos
+                            <div class="btn-toolbar justify-content-between" role="toolbar" aria-label="Toolbar with button groups">
+                                <div class="btn-group" role="group" aria-label="First group">
+                                    <button id="btn_${servicio.servicio}" name="${servicio.servicio}" type="button" class="btn btn-info btn-outline-secondary btn-servicio"> Pagar </button>                                    
+                                    <button id="btn_${servicio.servicio}_historial" name="${servicio.servicio}" type="button" class="btn btn-sm btn-outline-secondary btn-historial"> Historal de pagos </button>
+                                </div>
+                                <div class="input-group">
+                                    <button name="${servicio.servicio}" type="button" class="btn btn-info btn-edit">
+                                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-pencil-square" viewBox="0 0 16 16"><path d="M15.502 1.94a.5.5 0 0 1 0 .706L14.459 3.69l-2-2L13.502.646a.5.5 0 0 1 .707 0l1.293 1.293zm-1.75 2.456-2-2L4.939 9.21a.5.5 0 0 0-.121.196l-.805 2.414a.25.25 0 0 0 .316.316l2.414-.805a.5.5 0 0 0 .196-.12l6.813-6.814z"/><path fill-rule="evenodd" d="M1 13.5A1.5 1.5 0 0 0 2.5 15h11a1.5 1.5 0 0 0 1.5-1.5v-6a.5.5 0 0 0-1 0v6a.5.5 0 0 1-.5.5h-11a.5.5 0 0 1-.5-.5v-11a.5.5 0 0 1 .5-.5H9a.5.5 0 0 0 0-1H2.5A1.5 1.5 0 0 0 1 2.5v11z"/></svg>
                                     </button>
                                 </div>
                             </div>
@@ -307,16 +163,16 @@ servicios.forEach(servicio => {
                 </div>
             </div>
         </div>
-    </div>`
+    </div>`;
     divServicios.appendChild(contenedor);
 });
 
 
-let divBanco = document.getElementById("banco")
-let contenedor = document.createElement("div")
+let divBanco = document.getElementById("banco");
+let contenedor = document.createElement("div");
 contenedor.classList.add('col');
 contenedor.innerHTML = 
-`<div class="album py-5 bg-light">
+`<div class="album py-5 bg-light border border-primary">
     <div class="container-fluid">
         <div class="row row-cols-12 row-cols-sm-12 row-cols-md-12 g-12">
             <div class="col animacion">
@@ -339,16 +195,8 @@ contenedor.innerHTML =
             </div>
         </div>
     </div>
-</div>`
+</div>`;
 divBanco.appendChild(contenedor);
-
-let btnLuz = document.getElementById("btn_Luz");
-let btnGas = document.getElementById("btn_Gas");
-let btnInt = document.getElementById("btn_Internet");
-
-let btnLuzH = document.getElementById("btn_Luz_historial");
-let btnGasH = document.getElementById("btn_Gas_historial");
-let btnIntH = document.getElementById("btn_Internet_historial");
 
 let btnDeposito = document.getElementById("btn_deposito");
 let btnExtraccion = document.getElementById("btn_extraccion");
@@ -361,46 +209,15 @@ let tiuloModalBanco = document.querySelector("#modal-title-banco");
 let bancoModal = document.querySelector("#banco-modal");
 let bancoSaldo = document.querySelector("#banco-saldo");
 
+let tiuloModalEdit = document.querySelector("#modal-title-edit");
+let editName = document.querySelector("#edit-nombre");
+let editSaldo = document.querySelector("#edit-saldo");
+
 let btnPagar = document.getElementById("pagar");
 
+let btnedit = document.getElementById("edit");
+
 let btnBanco = document.getElementById("banco-btn");
-
-
-btnLuz.onclick = () =>{
-    tiuloModalPagos.textContent =`Pagar Luz`
-    deudaModalPagos.textContent =`Total a pagar: ${deudaLuz} ( su pago puede ser parcial )`
-    pagoModalPagos.value = deudaLuz;
-    btnPagar.value = "Luz"
-    $("#modalPagos").modal();
-}
-
-btnGas.onclick = () =>{
-    tiuloModalPagos.textContent =`Pagar Gas`
-    deudaModalPagos.textContent =`Total a pagar: ${deudaGas} ( su pago puede ser parcial )`
-    pagoModalPagos.value = deudaGas;
-    btnPagar.value = "Gas"
-    $("#modalPagos").modal();
-}
-
-btnInt.onclick = () =>{    
-    tiuloModalPagos.textContent =`Pagar Internet`
-    deudaModalPagos.textContent =`Total a pagar: ${deudaInt} ( su pago puede ser parcial )`
-    pagoModalPagos.value = deudaInt;
-    btnPagar.value = "Internet"
-    $("#modalPagos").modal();
-}
-
-btnLuzH.onclick = () =>{
-    historial("Luz");
-}
-
-btnGasH.onclick = () =>{
-    historial("Gas");
-}
-
-btnIntH.onclick = () =>{
-    historial("Internet");
-}
 
 btnPagar.onclick = () =>{
     let pago = document.querySelector("#pago-modal").value;
@@ -429,4 +246,57 @@ btnBanco.onclick = () =>{
     let saldo = document.querySelector("#banco-saldo").value;
     banco(btnBanco.value,saldo);
 }
+
+const toast = (mensaje,color1,color2)=>{
+    Toastify({
+        text: `${mensaje}`,
+        duration: 3000,
+        newWindow: true,
+        close: true,
+        gravity: "top",
+        position: "right", 
+        stopOnFocus: true,
+        style: {
+            background: `linear-gradient(to right, #${color1}, #${color2})`,
+        },
+    }).showToast();
+}
+
+$('.btn-servicio').on('click', function(e) {
+    let servicioName = `${$(this).attr('name')}`;
+    let results = servicios.filter(function (servicio) { return servicio.servicio == servicioName });
+    let result = (results.length > 0) ? results[0] : null;
+
+    tiuloModalPagos.textContent =`Pagar ${result.servicio}`;
+    deudaModalPagos.textContent =`Total a pagar: ${result.monto} ( su pago puede ser parcial )`;
+    pagoModalPagos.value = result.monto;
+    btnPagar.value = `${$(this).attr('name')}`;
+    $("#modalPagos").modal();
+});
+
+$('.btn-historial').on('click', function(e) {
+    let servicioName = `${$(this).attr('name')}`;
+    historial(servicioName);
+});
+
+
+$('.btn-edit').on('click', function(e) {
+    let servicioName = `${$(this).attr('name')}`;
+    let results = servicios.filter(function (servicio) { return servicio.servicio == servicioName });
+    let result = (results.length > 0) ? results[0] : null;
+
+    btnedit.name = servicioName;
+    tiuloModalEdit.textContent = `Editar el servicio ${servicioName}`;
+    editName.value = result.servicio;
+    editSaldo.value = result.monto;
+
+    $("#modalEdit").modal();
+});
+
+$('#edit').on('click', function(e) {
+    let servicioName = `${$(this).attr('name')}`;
+
+    editarServicio(servicioName)
+});
+
 
