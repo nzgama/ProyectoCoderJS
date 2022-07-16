@@ -14,7 +14,6 @@ const banco = (operacion,saldo) =>{
     let saldoDisponible = document.querySelector("#banco-modal");
 
     if (operacion == "Deposito") {
-
         saldoBanco = saldoBanco + Number(saldo);
         saldoDisponible.textContent =`Saldo disponible: ${saldoBanco}`;
         toast("Operacion Exitosa","00b09b","96c93d");
@@ -200,23 +199,17 @@ divBanco.appendChild(contenedor);
 
 let btnDeposito = document.getElementById("btn_deposito");
 let btnExtraccion = document.getElementById("btn_extraccion");
-
 let tiuloModalPagos = document.querySelector("#modal-title-pago");
 let deudaModalPagos = document.querySelector("#deuda-modal");
 let pagoModalPagos = document.querySelector("#pago-modal");
-
 let tiuloModalBanco = document.querySelector("#modal-title-banco");
 let bancoModal = document.querySelector("#banco-modal");
 let bancoSaldo = document.querySelector("#banco-saldo");
-
 let tiuloModalEdit = document.querySelector("#modal-title-edit");
 let editName = document.querySelector("#edit-nombre");
 let editSaldo = document.querySelector("#edit-saldo");
-
 let btnPagar = document.getElementById("pagar");
-
 let btnedit = document.getElementById("edit");
-
 let btnBanco = document.getElementById("banco-btn");
 
 btnPagar.onclick = () =>{
@@ -266,7 +259,6 @@ $('.btn-servicio').on('click', function(e) {
     let servicioName = `${$(this).attr('name')}`;
     let results = servicios.filter(function (servicio) { return servicio.servicio == servicioName });
     let result = (results.length > 0) ? results[0] : null;
-
     tiuloModalPagos.textContent =`Pagar ${result.servicio}`;
     deudaModalPagos.textContent =`Total a pagar: ${result.monto} ( su pago puede ser parcial )`;
     pagoModalPagos.value = result.monto;
@@ -284,18 +276,15 @@ $('.btn-edit').on('click', function(e) {
     let servicioName = `${$(this).attr('name')}`;
     let results = servicios.filter(function (servicio) { return servicio.servicio == servicioName });
     let result = (results.length > 0) ? results[0] : null;
-
     btnedit.name = servicioName;
     tiuloModalEdit.textContent = `Editar el servicio ${servicioName}`;
     editName.value = result.servicio;
     editSaldo.value = result.monto;
-
     $("#modalEdit").modal();
 });
 
 $('#edit').on('click', function(e) {
     let servicioName = `${$(this).attr('name')}`;
-
     editarServicio(servicioName)
 });
 
