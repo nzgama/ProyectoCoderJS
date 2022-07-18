@@ -144,7 +144,7 @@ servicios.forEach(servicio => {
                 <div class="col animacion">
                     <div class="card shadow-sm">
                         <div class="card-body">
-                            <p class="card-text">Resumen de la cuenta de ${servicio.servicio}.</p>
+                            <p class="card-text">Mi deuda ${servicio.servicio}.</p>
                             <small class="text-muted">Total a pagar $ ${servicio.monto}</small>
                             <div class="btn-toolbar justify-content-between" role="toolbar" aria-label="Toolbar with button groups">
                                 <div class="btn-group" role="group" aria-label="First group">
@@ -177,7 +177,7 @@ contenedor.innerHTML =
             <div class="col animacion">
                 <div class="card shadow-sm">
                     <div class="card-body">
-                        <p class="card-text">Resumen de la cuenta bancaria.</p>
+                        <p class="card-text">Cuenta bancaria.</p>
                         <small class="text-muted">Saldo disponible $ ${saldoBanco}</small>
                         <div class="d-flex justify-content-between align-items-center">
                             <div class="btn-group">
