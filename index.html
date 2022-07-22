@@ -56,7 +56,7 @@
               Opciones
             </a>
             <div class="dropdown-menu" aria-labelledby="navbarDropdown">
-              <a class="dropdown-item" href="#">Servicios</a>
+              <a id="servicios-p" class="dropdown-item" href="#">Servicios</a>
               <a class="dropdown-item" href="#">Bancos</a>
               <div class="dropdown-divider"></div>
               <a class="dropdown-item" href="#">Mi perfil</a>
@@ -253,6 +253,57 @@
       </div>
     </div>
 
+    <div class="modal" tabindex="-1" id="modalAdd">
+      <div class="modal-dialog">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 id="modal-title-edit" class="modal-title">Agregar Servicio</h5>
+            <button
+              type="button"
+              class="close"
+              data-dismiss="modal"
+              aria-label="Close"
+            >
+              <span aria-hidden="true">&times;</span>
+            </button>
+          </div>
+          <div class="modal-body">
+            <div class="input-group input-group-sm mb-3">
+              <div class="input-group-prepend">
+                <span class="input-group-text" id="inputGroup-sizing-sm"
+                  >Nombre
+                </span>
+              </div>
+              <input id="add-nombre" type="text" class="form-control" />
+            </div>
+
+            <div class="input-group input-group-sm mb-3">
+              <div class="input-group-prepend">
+                <span class="input-group-text" id="inputGroup-sizing-sm"
+                  >Saldo
+                </span>
+              </div>
+              <input id="add-saldo" type="number" class="form-control" />
+            </div>
+          </div>
+
+          <div class="modal-footer">
+            <button
+              id="cerrar-add"
+              type="button"
+              class="btn btn-secondary"
+              data-dismiss="modal"
+            >
+              Cerrar
+            </button>
+            <button id="add" type="button" class="btn btn-primary">
+              Agregar
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/luxon/3.0.1/luxon.min.js"></script>
     <!-- Optional JavaScript; choose one of the two! -->
     <!-- Option 1: jQuery and Bootstrap Bundle (includes Popper) -->
     <script

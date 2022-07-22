@@ -3,7 +3,10 @@ let arrayHisorialBanco = [];
 
 let saldoBanco = Number(7000);
 
-const servicios = [
+const date = luxon.DateTime.now();
+
+
+let servicios = [
     {servicio: 'Luz', monto: 6000},
     {servicio: 'Gas', monto: 7000},
     {servicio: 'Internet', monto: 8000},
@@ -17,7 +20,7 @@ const banco = (operacion,saldo) =>{
         saldoBanco = saldoBanco + Number(saldo);
         saldoDisponible.textContent =`Saldo disponible: ${saldoBanco}`;
         toast("Operacion Exitosa","00b09b","96c93d");
-        arrayHisorialBanco.push({operacion: operacion, monto: saldo, fecha:'hoy', estado:'ok'});
+        arrayHisorialBanco.push({operacion: operacion, monto: saldo, fecha:date.toLocaleString(), estado:'ok'});
         actualizarValores("banco");
 
     } else {
@@ -26,14 +29,14 @@ const banco = (operacion,saldo) =>{
 
             saldoDisponible.textContent =`Saldo disponible: ${saldoBanco}`;
             toast("Saldo insuficiente","E8271A","C22115");
-            arrayHisorialBanco.push({operacion: operacion, monto: saldo, fecha:'hoy', estado:'ok'});
+            arrayHisorialBanco.push({operacion: operacion, monto: saldo, fecha:date.toLocaleString(), estado:'ok'});
 
         }else{
 
             saldoBanco = saldoBanco - saldo;
             saldoDisponible.textContent =`Saldo disponible: ${saldoBanco}`;
             toast("Operacion Exitosa","00b09b","96c93d");
-            arrayHisorialBanco.push({operacion: operacion, monto: saldo, fecha:'hoy', estado:'ok'});
+            arrayHisorialBanco.push({operacion: operacion, monto: saldo, fecha:date.toLocaleString(), estado:'ok'});
             actualizarValores("banco");
         }        
     }
@@ -52,7 +55,7 @@ const pagar = (servicioName,pago) =>{
 
         deudaModal.textContent = `Total a pagar: ${result.monto} ( su pago puede ser parcial )`;
         toast("Saldo insuficiente","E8271A","C22115");
-        arrayHisorial.push({servicio: servicioName, monto: 0, fecha:'hoy', pago:'fallido'});
+        arrayHisorial.push({servicio: servicioName, monto: 0, fecha:date.toLocaleString(), pago:'fallido'});
 
     }else if(result.monto <= 0){
 
@@ -66,7 +69,7 @@ const pagar = (servicioName,pago) =>{
         deudaModal.textContent = Math.sign(result.monto) == -1 ? `Saldo a favor: ${result.monto * -1}` : `Total a pagar: ${result.monto} ( su pago puede ser parcial )`;
         toast("Operacion Exitosa","00b09b","96c93d");
         pagoModal.value = Math.sign(result.monto) == -1 ? 0 : result.monto;
-        arrayHisorial.push({servicio: servicioName, monto: pago, fecha:'hoy', pago:'ok'});
+        arrayHisorial.push({servicio: servicioName, monto: pago, fecha:date.toLocaleString(), pago:'ok'});
         actualizarValores(servicioName);
     }
 }
@@ -131,41 +134,48 @@ const editarServicio = (servicioName) =>{
     actualizarValores(newName,oldName);
 }
 
-
-let divServicios = document.getElementById("servicios");
-servicios.forEach(servicio => {
-    let contenedor = document.createElement("div");
-    contenedor.classList.add('col-4');
-    contenedor.style = "margin-bottom: 1vw;";
-    contenedor.innerHTML = 
-    `<div id="${servicio.servicio}" class="album py-5 bg-light border border-primary">
-        <div class="container-fluid">
-            <div class="row row-cols-12 row-cols-sm-12 row-cols-md-12 g-12">
-                <div class="col animacion">
-                    <div class="card shadow-sm">
-                        <div class="card-body">
-                            <p class="card-text">Mi deuda ${servicio.servicio}.</p>
-                            <small class="text-muted">Total a pagar $ ${servicio.monto}</small>
-                            <div class="btn-toolbar justify-content-between" role="toolbar" aria-label="Toolbar with button groups">
-                                <div class="btn-group" role="group" aria-label="First group">
-                                    <button id="btn_${servicio.servicio}" name="${servicio.servicio}" type="button" class="btn btn-info btn-outline-secondary btn-servicio"> Pagar </button>                                    
-                                    <button id="btn_${servicio.servicio}_historial" name="${servicio.servicio}" type="button" class="btn btn-sm btn-outline-secondary btn-historial"> Historal de pagos </button>
-                                </div>
-                                <div class="input-group">
-                                    <button name="${servicio.servicio}" type="button" class="btn btn-info btn-edit">
-                                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-pencil-square" viewBox="0 0 16 16"><path d="M15.502 1.94a.5.5 0 0 1 0 .706L14.459 3.69l-2-2L13.502.646a.5.5 0 0 1 .707 0l1.293 1.293zm-1.75 2.456-2-2L4.939 9.21a.5.5 0 0 0-.121.196l-.805 2.414a.25.25 0 0 0 .316.316l2.414-.805a.5.5 0 0 0 .196-.12l6.813-6.814z"/><path fill-rule="evenodd" d="M1 13.5A1.5 1.5 0 0 0 2.5 15h11a1.5 1.5 0 0 0 1.5-1.5v-6a.5.5 0 0 0-1 0v6a.5.5 0 0 1-.5.5h-11a.5.5 0 0 1-.5-.5v-11a.5.5 0 0 1 .5-.5H9a.5.5 0 0 0 0-1H2.5A1.5 1.5 0 0 0 1 2.5v11z"/></svg>
-                                    </button>
+const servicioDiv = ()=>{
+    let divServicios = document.getElementById("servicios");
+    servicios.forEach(servicio => {
+        if ($(`#${servicio.servicio}`).val() == undefined) {
+            let contenedor = document.createElement("div");
+            contenedor.classList.add('col-4');
+            contenedor.style = "margin-bottom: 1vw;";
+            contenedor.innerHTML = 
+            `<div id="${servicio.servicio}" class="album py-5 bg-light border border-primary">
+                <div class="container-fluid">
+                    <div class="row row-cols-12 row-cols-sm-12 row-cols-md-12 g-12">
+                        <div class="col animacion">
+                            <div class="card shadow-sm">
+                                <div class="card-body">
+                                    <p class="card-text">Mi deuda ${servicio.servicio}.</p>
+                                    <small class="text-muted">Total a pagar $ ${servicio.monto}</small>
+                                    <div class="btn-toolbar justify-content-between" role="toolbar" aria-label="Toolbar with button groups">
+                                        <div class="btn-group" role="group" aria-label="First group">
+                                            <button id="btn_${servicio.servicio}" name="${servicio.servicio}" type="button" class="btn btn-info btn-outline-secondary btn-servicio"> Pagar </button>                                    
+                                            <button id="btn_${servicio.servicio}_historial" name="${servicio.servicio}" type="button" class="btn btn-sm btn-outline-secondary btn-historial"> Historal de pagos </button>
+                                        </div>
+                                        <div class="input-group">
+                                            <button name="${servicio.servicio}" style="margin: 2px;" type="button" class="btn btn-info btn-edit">
+                                                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-pencil-square" viewBox="0 0 16 16"><path d="M15.502 1.94a.5.5 0 0 1 0 .706L14.459 3.69l-2-2L13.502.646a.5.5 0 0 1 .707 0l1.293 1.293zm-1.75 2.456-2-2L4.939 9.21a.5.5 0 0 0-.121.196l-.805 2.414a.25.25 0 0 0 .316.316l2.414-.805a.5.5 0 0 0 .196-.12l6.813-6.814z"/><path fill-rule="evenodd" d="M1 13.5A1.5 1.5 0 0 0 2.5 15h11a1.5 1.5 0 0 0 1.5-1.5v-6a.5.5 0 0 0-1 0v6a.5.5 0 0 1-.5.5h-11a.5.5 0 0 1-.5-.5v-11a.5.5 0 0 1 .5-.5H9a.5.5 0 0 0 0-1H2.5A1.5 1.5 0 0 0 1 2.5v11z"/></svg>
+                                            </button>
+                                            <button name="${servicio.servicio}" style="margin: 2px;" type="button" class="btn btn-danger btn-borrar">
+                                                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-trash-fill" viewBox="0 0 16 16"><path d="M2.5 1a1 1 0 0 0-1 1v1a1 1 0 0 0 1 1H3v9a2 2 0 0 0 2 2h6a2 2 0 0 0 2-2V4h.5a1 1 0 0 0 1-1V2a1 1 0 0 0-1-1H10a1 1 0 0 0-1-1H7a1 1 0 0 0-1 1H2.5zm3 4a.5.5 0 0 1 .5.5v7a.5.5 0 0 1-1 0v-7a.5.5 0 0 1 .5-.5zM8 5a.5.5 0 0 1 .5.5v7a.5.5 0 0 1-1 0v-7A.5.5 0 0 1 8 5zm3 .5v7a.5.5 0 0 1-1 0v-7a.5.5 0 0 1 1 0z"/></svg>                                       
+                                            </button>
+                                        </div>
+                                    </div>
                                 </div>
                             </div>
                         </div>
                     </div>
                 </div>
-            </div>
-        </div>
-    </div>`;
-    divServicios.appendChild(contenedor);
-});
+            </div>`;
+            divServicios.appendChild(contenedor);
+        }
+    });
+}
 
+const bancoDiv = ()=>{
 
 let divBanco = document.getElementById("banco");
 let contenedor = document.createElement("div");
@@ -196,6 +206,10 @@ contenedor.innerHTML =
     </div>
 </div>`;
 divBanco.appendChild(contenedor);
+}
+
+servicioDiv();
+bancoDiv();
 
 let btnDeposito = document.getElementById("btn_deposito");
 let btnExtraccion = document.getElementById("btn_extraccion");
@@ -283,9 +297,43 @@ $('.btn-edit').on('click', function(e) {
     $("#modalEdit").modal();
 });
 
+$('.btn-borrar').on('click', function(e) {
+    let servicioName = `${$(this).attr('name')}`;
+
+    servicios = servicios.filter((servicio) => servicio.servicio !== servicioName);
+
+    toast("Operacion Exitosa","00b09b","96c93d");
+
+    console.log($(`#${servicioName}`)[0]);
+
+    $(`#${servicioName}`)[0].remove();
+});
+
 $('#edit').on('click', function(e) {
     let servicioName = `${$(this).attr('name')}`;
     editarServicio(servicioName)
 });
 
 
+$('#servicios-p').on('click', function(e) {
+     $("#modalAdd").modal();
+});
+
+$('#add').on('click', function(e) {
+    let nombre = $("#add-nombre").val();
+    let saldo = Number($("#add-saldo").val());
+
+    nombre == '' && toast("Debe ingresar un nombre","E8271A","C22115");
+    saldo == '' && toast("Debe ingresar un saldo","E8271A","C22115");
+    saldo < 0 && toast("El saldo no puede ser negativo","E8271A","C22115");
+
+    if (!(nombre == '') && !(saldo < 0 ||saldo=='' )) {
+
+    toast("Operacion Exitosa","00b09b","96c93d");
+
+    servicios.push({servicio: nombre, monto: saldo});
+    servicioDiv();
+    $('#cerrar-add').click();
+
+    }
+});
