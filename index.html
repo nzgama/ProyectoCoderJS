@@ -41,7 +41,7 @@
         <ul class="navbar-nav mr-auto">
           <li class="nav-item active">
             <a class="nav-link" href="#"
-              >Home <span class="sr-only">(current)</span></a
+              >Reset <span class="sr-only">(current)</span></a
             >
           </li>
           <li class="nav-item dropdown">
@@ -303,6 +303,58 @@
         </div>
       </div>
     </div>
+
+    <div class="modal" tabindex="-1" id="modalDelet">
+      <div class="modal-dialog">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 id="modal-title-edit" class="modal-title">Eliminar Servicio</h5>
+            <button
+              type="button"
+              class="close"
+              data-dismiss="modal"
+              aria-label="Close"
+            >
+              <span aria-hidden="true">&times;</span>
+            </button>
+          </div>
+          <div class="modal-body">
+            <div class="input-group input-group-sm mb-3">
+              <h5>Esta seguro que desea eliminar el servicio ?</h5>
+              <p>
+                Complete la siguiente palabrea de seguridad para continuar :
+              </p>
+              <button
+                id="palabra-seguridad"
+                type="button"
+                class="btn btn-danger"
+              ></button>
+            </div>
+            <div class="input-group input-group-sm mb-3">
+              <div class="input-group-prepend">
+                <span class="input-group-text">Palabra de seguridad </span>
+              </div>
+              <input id="palabra-seguridad-confirm" class="form-control" />
+            </div>
+          </div>
+
+          <div class="modal-footer">
+            <button
+              id="cerrar-deleted"
+              type="button"
+              class="btn btn-secondary"
+              data-dismiss="modal"
+            >
+              Cerrar
+            </button>
+            <button id="deleted" type="button" class="btn btn-danger">
+              Confirmar
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+
     <script src="https://cdnjs.cloudflare.com/ajax/libs/luxon/3.0.1/luxon.min.js"></script>
     <!-- Optional JavaScript; choose one of the two! -->
     <!-- Option 1: jQuery and Bootstrap Bundle (includes Popper) -->

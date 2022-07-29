@@ -1,16 +1,24 @@
-let arrayHisorial = [];
-let arrayHisorialBanco = [];
-
-let saldoBanco = Number(7000);
-
 const date = luxon.DateTime.now();
 
+let arrayHisorial = localStorage.arrayHisorial ? JSON.parse(localStorage.getItem('arrayHisorial')) : [];
+let arrayHisorialBanco = localStorage.arrayHisorialBanco ? JSON.parse(localStorage.getItem('arrayHisorialBanco')) : [];
+let saldoBanco = localStorage.saldoBanco ? localStorage.getItem('saldoBanco') : Number(7000);
 
-let servicios = [
-    {servicio: 'Luz', monto: 6000},
-    {servicio: 'Gas', monto: 7000},
-    {servicio: 'Internet', monto: 8000},
-];
+const obtenerServicios = async() => { 
+    if (localStorage.servicios == undefined || localStorage.servicios == '[]') {
+        await fetch('/data.json')
+        .then((response)=> response.json())
+        .then((data)=> {
+            let servicios = data;
+            localStorage.setItem('servicios',JSON.stringify(servicios));
+            servicioDiv();
+            bancoDiv();
+        });
+    }else{
+        servicioDiv();
+        bancoDiv();
+    }
+};
 
 const banco = (operacion,saldo) =>{
 
@@ -26,13 +34,10 @@ const banco = (operacion,saldo) =>{
     } else {
 
         if ((saldoBanco - Number(saldo)) < 0) {
-
             saldoDisponible.textContent =`Saldo disponible: ${saldoBanco}`;
             toast("Saldo insuficiente","E8271A","C22115");
             arrayHisorialBanco.push({operacion: operacion, monto: saldo, fecha:date.toLocaleString(), estado:'ok'});
-
         }else{
-
             saldoBanco = saldoBanco - saldo;
             saldoDisponible.textContent =`Saldo disponible: ${saldoBanco}`;
             toast("Operacion Exitosa","00b09b","96c93d");
@@ -40,42 +45,45 @@ const banco = (operacion,saldo) =>{
             actualizarValores("banco");
         }        
     }
+    localStorage.setItem('saldoBanco',saldoBanco);
+    localStorage.setItem('arrayHisorialBanco',JSON.stringify(arrayHisorialBanco));
 }
 
 
 const pagar = (servicioName,pago) =>{
 
+
+
+    let servicios = JSON.parse(localStorage.getItem('servicios'));
     let results = servicios.filter(function (servicio) { return servicio.servicio == servicioName });
     let result = results.length > 0 ? results[0] : null;
-
     let deudaModal = document.querySelector("#deuda-modal");
     let pagoModal = document.querySelector("#pago-modal");
 
     if ((saldoBanco - pago) < 0) {
-
         deudaModal.textContent = `Total a pagar: ${result.monto} ( su pago puede ser parcial )`;
         toast("Saldo insuficiente","E8271A","C22115");
         arrayHisorial.push({servicio: servicioName, monto: 0, fecha:date.toLocaleString(), pago:'fallido'});
-
+        localStorage.setItem('arrayHisorial',JSON.stringify(arrayHisorial));
     }else if(result.monto <= 0){
-
         deudaModal.textContent = Math.sign(result.monto) == -1 ? `Saldo a favor: ${result.monto * -1}` : `Total a pagar: ${result.monto} ( su pago puede ser parcial )`;
         toast("No registra deuda","1F27C2","2630F4");
-
     } else {
-
         saldoBanco = saldoBanco - pago;
         result.monto = result.monto - pago;
         deudaModal.textContent = Math.sign(result.monto) == -1 ? `Saldo a favor: ${result.monto * -1}` : `Total a pagar: ${result.monto} ( su pago puede ser parcial )`;
         toast("Operacion Exitosa","00b09b","96c93d");
         pagoModal.value = Math.sign(result.monto) == -1 ? 0 : result.monto;
         arrayHisorial.push({servicio: servicioName, monto: pago, fecha:date.toLocaleString(), pago:'ok'});
+        localStorage.setItem('arrayHisorial',JSON.stringify(arrayHisorial));
+        localStorage.setItem('servicios',JSON.stringify(servicios));
         actualizarValores(servicioName);
     }
 }
 
 const actualizarValores = (servicioName,servicioName2) =>{
 
+    let servicios = JSON.parse(localStorage.getItem('servicios'));
     let results = servicios.filter(function (servicio) { return servicio.servicio == servicioName });
     let result = (results.length > 0) ? results[0] : null;
 
@@ -86,9 +94,8 @@ const actualizarValores = (servicioName,servicioName2) =>{
             let servicioActualizar = svci.firstElementChild.firstElementChild.firstElementChild.firstElementChild.firstElementChild.firstElementChild.nextElementSibling;
             let servicioActualizarName = svci.firstElementChild.firstElementChild.firstElementChild.firstElementChild.firstElementChild.firstElementChild;
             let servicioActualizarBtn = svci.firstElementChild.firstElementChild.firstElementChild.firstElementChild.firstElementChild.firstElementChild.nextElementSibling.nextElementSibling.firstElementChild.firstElementChild;
-
             servicioActualizar.textContent = (Math.sign(result.monto) == -1)? `Saldo a favor: ${result.monto * -1}` : `Total a pagar: ${result.monto}`;
-            servicioActualizarName.textContent = `Resumen de la cuenta de ${result.servicio}.`;
+            servicioActualizarName.textContent = `Mi deuda ${result.servicio}.`;
             servicioActualizarBtn.name = `${result.servicio}`;
             svci.id = `${result.servicio}`;
         }
@@ -108,7 +115,6 @@ const historial = (servicio) =>{
     arrayHisorial.forEach(element => {
 
         if (servicio == element.servicio) {
-
             let contenedor = document.createElement("p")
             contenedor.innerHTML = `pago de ${element.servicio} por ${element.monto} el dia de ${element.fecha} el pago fue ${element.pago}`
             divH.appendChild(contenedor);
@@ -119,7 +125,7 @@ const historial = (servicio) =>{
 }
 
 const editarServicio = (servicioName) =>{
-
+    let servicios = JSON.parse(localStorage.getItem('servicios'));
     let results = servicios.filter(function (servicio) { return servicio.servicio == servicioName });
     let result = results.length > 0 ? results[0] : null;
     let oldName = result.servicio;
@@ -134,11 +140,33 @@ const editarServicio = (servicioName) =>{
     actualizarValores(newName,oldName);
 }
 
+function getRandomInt(max) {
+  return Math.floor(Math.random() * max);
+}
+
+const url = 'https://pokeapi.co/api/v2/pokemon?offset=20&limit=200';
+
+const obtenerPokem = async () => {
+    await fetch(url)
+        .then((response) => response.json())
+        .then((data) => {
+            let pokemonName = data.results;
+            let PalabraSeguridad = document.getElementById('palabra-seguridad');
+            PalabraSeguridad.innerText = `${pokemonName[getRandomInt(pokemonName.length - 1 )].name}`;
+       
+        });
+    
+};
+
 const servicioDiv = ()=>{
     let divServicios = document.getElementById("servicios");
-    servicios.forEach(servicio => {
+    let arr = JSON.parse(localStorage.getItem('servicios'));
+    let contenedor = '';
+    divServicios.innerHTML = contenedor;
+
+    arr.forEach(servicio => {
         if ($(`#${servicio.servicio}`).val() == undefined) {
-            let contenedor = document.createElement("div");
+            contenedor = document.createElement("div");
             contenedor.classList.add('col-4');
             contenedor.style = "margin-bottom: 1vw;";
             contenedor.innerHTML = 
@@ -173,6 +201,64 @@ const servicioDiv = ()=>{
             divServicios.appendChild(contenedor);
         }
     });
+
+    let tiuloModalPagos = document.querySelector("#modal-title-pago");
+    let deudaModalPagos = document.querySelector("#deuda-modal");
+    let pagoModalPagos = document.querySelector("#pago-modal");
+
+    let tiuloModalEdit = document.querySelector("#modal-title-edit");
+    let editName = document.querySelector("#edit-nombre");
+    let editSaldo = document.querySelector("#edit-saldo");
+    let btnPagar = document.getElementById("pagar");
+    let btnedit = document.getElementById("edit");
+    let btndelet = document.getElementById("deleted");
+
+
+    $('.btn-servicio').on('click', function(e) {
+        e.preventDefault();
+        let servicios = JSON.parse(localStorage.getItem('servicios'));
+        let servicioName = `${$(this).attr('name')}`;
+        let results = servicios.filter(function (servicio) { return servicio.servicio == servicioName });
+        let result = (results.length > 0) ? results[0] : null;
+        tiuloModalPagos.textContent =`Pagar ${result.servicio}`;
+        deudaModalPagos.textContent =`Total a pagar: ${result.monto} ( su pago puede ser parcial )`;
+        pagoModalPagos.value = result.monto;
+        btnPagar.value = `${$(this).attr('name')}`;
+        $("#modalPagos").modal();
+    });
+
+    $('.btn-historial').on('click', function(e) {
+        e.preventDefault();
+        let servicioName = `${$(this).attr('name')}`;
+        historial(servicioName);
+    });
+
+    $('.btn-edit').on('click', function(e) {
+        e.preventDefault();
+        let servicios = JSON.parse(localStorage.getItem('servicios'));
+        let servicioName = `${$(this).attr('name')}`;
+        let results = servicios.filter(function (servicio) { return servicio.servicio == servicioName });
+        let result = (results.length > 0) ? results[0] : null;
+        btnedit.name = servicioName;
+        tiuloModalEdit.textContent = `Editar el servicio ${servicioName}`;
+        editName.value = result.servicio;
+        editSaldo.value = result.monto;
+        $("#modalEdit").modal();
+    });
+
+    $('.btn-borrar').on('click', function(e) {
+        e.preventDefault();
+        let servicioName = `${$(this).attr('name')}`;
+        btndelet.name = servicioName;
+        obtenerPokem();
+        $("#modalDelet").modal();
+
+    });
+
+    btnPagar.onclick = () =>{
+        let pago = document.querySelector("#pago-modal").value;
+        pagar(btnPagar.value,pago);
+    }
 }
 
 const bancoDiv = ()=>{
@@ -181,78 +267,86 @@ let divBanco = document.getElementById("banco");
 let contenedor = document.createElement("div");
 contenedor.classList.add('col');
 contenedor.innerHTML = 
-`<div class="album py-5 bg-light border border-primary">
-    <div class="container-fluid">
-        <div class="row row-cols-12 row-cols-sm-12 row-cols-md-12 g-12">
-            <div class="col animacion">
-                <div class="card shadow-sm">
-                    <div class="card-body">
-                        <p class="card-text">Cuenta bancaria.</p>
-                        <small class="text-muted">Saldo disponible $ ${saldoBanco}</small>
-                        <div class="d-flex justify-content-between align-items-center">
-                            <div class="btn-group">
-                                <button id="btn_deposito" type="button" class="btn btn-info btn-outline-secondary">
-                                    Despositar Fondos 
-                                </button>
-                                <button id="btn_extraccion" type="button" class="btn btn-sm btn-outline-secondary"> 
-                                    Extraer Fordos
-                                </button>
+    `<div class="album py-5 bg-light border border-primary">
+        <div class="container-fluid">
+            <div class="row row-cols-12 row-cols-sm-12 row-cols-md-12 g-12">
+                <div class="col animacion">
+                    <div class="card shadow-sm">
+                        <div class="card-body">
+                            <p class="card-text">Cuenta bancaria.</p>
+                            <small class="text-muted">Saldo disponible $ ${saldoBanco}</small>
+                            <div class="d-flex justify-content-between align-items-center">
+                                <div class="btn-group">
+                                    <button id="btn_deposito" type="button" class="btn btn-info btn-outline-secondary">
+                                        Despositar Fondos 
+                                    </button>
+                                    <button id="btn_extraccion" type="button" class="btn btn-sm btn-outline-secondary"> 
+                                        Extraer Fordos
+                                    </button>
+                                </div>
                             </div>
                         </div>
                     </div>
                 </div>
             </div>
         </div>
-    </div>
-</div>`;
+    </div>`;
 divBanco.appendChild(contenedor);
-}
 
-servicioDiv();
-bancoDiv();
-
-let btnDeposito = document.getElementById("btn_deposito");
-let btnExtraccion = document.getElementById("btn_extraccion");
-let tiuloModalPagos = document.querySelector("#modal-title-pago");
-let deudaModalPagos = document.querySelector("#deuda-modal");
-let pagoModalPagos = document.querySelector("#pago-modal");
 let tiuloModalBanco = document.querySelector("#modal-title-banco");
 let bancoModal = document.querySelector("#banco-modal");
 let bancoSaldo = document.querySelector("#banco-saldo");
-let tiuloModalEdit = document.querySelector("#modal-title-edit");
-let editName = document.querySelector("#edit-nombre");
-let editSaldo = document.querySelector("#edit-saldo");
-let btnPagar = document.getElementById("pagar");
-let btnedit = document.getElementById("edit");
 let btnBanco = document.getElementById("banco-btn");
 
-btnPagar.onclick = () =>{
-    let pago = document.querySelector("#pago-modal").value;
-    pagar(btnPagar.value,pago);
-}
-
-btnDeposito.onclick = () =>{
+$('#btn_deposito').on('click', function(e) {
     tiuloModalBanco.textContent =`Banco Desposito`
     bancoModal.textContent =`Saldo disponible: ${saldoBanco}`
     bancoSaldo.value = 0;
     btnBanco.value = "Deposito"    
     btnBanco.textContent = "Depositar"    
     $("#modalBanco").modal();
-}
+});
 
-btnExtraccion.onclick = () =>{
+$('#btn_extraccion').on('click', function(e) {
     tiuloModalBanco.textContent =`Banco Extraccion`
     bancoModal.textContent =`Saldo disponible: ${saldoBanco} ( su extraccion puede ser parcial )`
     bancoSaldo.value = 0;
     btnBanco.value = "Extraccion"    
     btnBanco.textContent = "Extraer"    
     $("#modalBanco").modal();
-}
+});
 
-btnBanco.onclick = () =>{
+$('#banco-btn').on('click', function(e) {
     let saldo = document.querySelector("#banco-saldo").value;
     banco(btnBanco.value,saldo);
+});
+
+
 }
+
+
+// btnDeposito.onclick = () =>{
+//     tiuloModalBanco.textContent =`Banco Desposito`
+//     bancoModal.textContent =`Saldo disponible: ${saldoBanco}`
+//     bancoSaldo.value = 0;
+//     btnBanco.value = "Deposito"    
+//     btnBanco.textContent = "Depositar"    
+//     $("#modalBanco").modal();
+// }
+
+// btnExtraccion.onclick = () =>{
+//     tiuloModalBanco.textContent =`Banco Extraccion`
+//     bancoModal.textContent =`Saldo disponible: ${saldoBanco} ( su extraccion puede ser parcial )`
+//     bancoSaldo.value = 0;
+//     btnBanco.value = "Extraccion"    
+//     btnBanco.textContent = "Extraer"    
+//     $("#modalBanco").modal();
+// }
+
+// btnBanco.onclick = () =>{
+//     let saldo = document.querySelector("#banco-saldo").value;
+//     banco(btnBanco.value,saldo);
+// }
 
 const toast = (mensaje,color1,color2)=>{
     Toastify({
@@ -269,51 +363,13 @@ const toast = (mensaje,color1,color2)=>{
     }).showToast();
 }
 
-$('.btn-servicio').on('click', function(e) {
-    let servicioName = `${$(this).attr('name')}`;
-    let results = servicios.filter(function (servicio) { return servicio.servicio == servicioName });
-    let result = (results.length > 0) ? results[0] : null;
-    tiuloModalPagos.textContent =`Pagar ${result.servicio}`;
-    deudaModalPagos.textContent =`Total a pagar: ${result.monto} ( su pago puede ser parcial )`;
-    pagoModalPagos.value = result.monto;
-    btnPagar.value = `${$(this).attr('name')}`;
-    $("#modalPagos").modal();
-});
-
-$('.btn-historial').on('click', function(e) {
-    let servicioName = `${$(this).attr('name')}`;
-    historial(servicioName);
-});
-
-
-$('.btn-edit').on('click', function(e) {
-    let servicioName = `${$(this).attr('name')}`;
-    let results = servicios.filter(function (servicio) { return servicio.servicio == servicioName });
-    let result = (results.length > 0) ? results[0] : null;
-    btnedit.name = servicioName;
-    tiuloModalEdit.textContent = `Editar el servicio ${servicioName}`;
-    editName.value = result.servicio;
-    editSaldo.value = result.monto;
-    $("#modalEdit").modal();
-});
-
-$('.btn-borrar').on('click', function(e) {
-    let servicioName = `${$(this).attr('name')}`;
-
-    servicios = servicios.filter((servicio) => servicio.servicio !== servicioName);
-
-    toast("Operacion Exitosa","00b09b","96c93d");
-
-    console.log($(`#${servicioName}`)[0]);
-
-    $(`#${servicioName}`)[0].remove();
-});
+//let btnDeposito = document.getElementById("btn_deposito");
+//let btnExtraccion = document.getElementById("btn_extraccion");
 
 $('#edit').on('click', function(e) {
     let servicioName = `${$(this).attr('name')}`;
     editarServicio(servicioName)
 });
-
 
 $('#servicios-p').on('click', function(e) {
      $("#modalAdd").modal();
@@ -330,10 +386,35 @@ $('#add').on('click', function(e) {
     if (!(nombre == '') && !(saldo < 0 ||saldo=='' )) {
 
     toast("Operacion Exitosa","00b09b","96c93d");
-
+    let servicios = JSON.parse(localStorage.getItem('servicios'));
     servicios.push({servicio: nombre, monto: saldo});
+    localStorage.setItem('servicios',JSON.stringify(servicios));
     servicioDiv();
     $('#cerrar-add').click();
 
     }
 });
+
+$('#deleted').on('click', function(e) {
+
+    let palabra = document.getElementById('palabra-seguridad').textContent;
+    let palabra2 = $('#palabra-seguridad-confirm').val();
+
+    if (palabra == palabra2) {
+    
+        let servicioName = `${$(this).attr('name')}`;
+        let servicios = JSON.parse(localStorage.getItem('servicios'));
+        localStorage.removeItem('servicios')
+        servicios = servicios.filter((servicio) => servicio.servicio !== servicioName);
+        localStorage.setItem('servicios',JSON.stringify(servicios));
+        toast("Operacion Exitosa","00b09b","96c93d");
+        $(`#${servicioName}`)[0].remove();
+        $('#cerrar-deleted').click();
+        servicioDiv();
+     }else{
+        toast("Palabra Incorrecta","E8271A","C22115");
+
+     }
+});
+
+obtenerServicios();
