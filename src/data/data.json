@@ -1,0 +1,12 @@
+ [
+    [    
+        {"servicio": "Luz", "monto": 6000},
+        {"servicio": "Gas", "monto": 7000},
+        {"servicio": "Internet", "monto": 8000}
+    ],
+    
+    [
+        { "banco": 7000}
+    ]
+
+]
