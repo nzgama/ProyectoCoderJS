@@ -39,7 +39,7 @@
 
       <div class="collapse navbar-collapse" id="navbarSupportedContent">
         <ul class="navbar-nav mr-auto">
-          <li class="nav-item active">
+          <li id="reset" class="nav-item active">
             <a class="nav-link" href="#"
               >Reset <span class="sr-only">(current)</span></a
             >
@@ -349,6 +349,47 @@
             </button>
             <button id="deleted" type="button" class="btn btn-danger">
               Confirmar
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div
+      class="modal fade"
+      id="modalLogin"
+      data-backdrop="static"
+      data-keyboard="false"
+      tabindex="-1"
+      aria-labelledby="staticBackdropLabel"
+      aria-hidden="true"
+    >
+      <div class="modal-dialog">
+        <div class="modal-content">
+          <div class="modal-body">
+            <div class="input-group input-group-sm mb-3">
+              <h5 id="title-login"></h5>
+              <p id="descrp-login"></p>
+            </div>
+
+            <div class="input-group input-group-sm mb-3">
+              <div class="input-group-prepend">
+                <span class="input-group-text">Nombre</span>
+              </div>
+              <input id="nombre-user" class="form-control" />
+            </div>
+
+            <div class="input-group input-group-sm mb-3">
+              <div class="input-group-prepend">
+                <span class="input-group-text">Contraseña:</span>
+              </div>
+              <input id="pass-user" class="form-control" />
+            </div>
+          </div>
+
+          <div class="modal-footer">
+            <button id="login-btn" type="button" class="btn btn-primary">
+              Login
             </button>
           </div>
         </div>

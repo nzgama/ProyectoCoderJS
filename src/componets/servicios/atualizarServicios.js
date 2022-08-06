@@ -1,5 +1,4 @@
 import { historialServicios } from "./historalServicios.js";
-
 import {obtenerPokem} from "../../app.js"
 
 let tiuloModalPagos = document.querySelector("#modal-title-pago");

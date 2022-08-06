@@ -3,7 +3,6 @@ import { actualizarValores } from "../../app.js";
 
 const date = luxon.DateTime.now();
 
-
 export const banco = (operacion,saldo) =>{
 
     let saldoBanco = Number(localStorage.getItem('saldoBanco'));

@@ -1,4 +1,4 @@
-export const historialServicios = (servicio) =>{
+export const historialServicios = (servicio) => {
 
     let divH = document.getElementById("historial-modal");
     let registros = divH.children;
@@ -12,8 +12,8 @@ export const historialServicios = (servicio) =>{
             let contenedor = document.createElement("p")
             contenedor.innerHTML = `pago de ${element.servicio} por ${element.monto} el dia de ${element.fecha} el pago fue ${element.pago}`
             divH.appendChild(contenedor);
-          }
-     });
+        }
+    });
 
     $("#modalHistorial").modal();
 }
