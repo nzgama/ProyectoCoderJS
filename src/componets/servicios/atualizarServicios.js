@@ -1,5 +1,5 @@
 import { historialServicios } from "./historalServicios.js";
-import {obtenerPokem} from "../../app.js"
+import { obtenerPokem } from "../../app.js";
 
 let tiuloModalPagos = document.querySelector("#modal-title-pago");
 let deudaModalPagos = document.querySelector("#deuda-modal");
@@ -12,19 +12,17 @@ let btndelet = document.getElementById("deleted");
 let btnPagar = document.getElementById("pagar");
 
 export const servicioDiv = () => {
+  let divServicios = document.getElementById("servicios");
+  let arr = JSON.parse(localStorage.getItem("servicios"));
+  let contenedor = "";
+  divServicios.innerHTML = contenedor;
 
-    let divServicios = document.getElementById("servicios");
-    let arr = JSON.parse(localStorage.getItem('servicios'));
-    let contenedor = '';
-    divServicios.innerHTML = contenedor;
-
-    arr.forEach(servicio => {
-        if ($(`#${servicio.servicio}`).val() == undefined) {
-            contenedor = document.createElement("div");
-            contenedor.classList.add('col-4');
-            contenedor.style = "margin-bottom: 1vw;";
-            contenedor.innerHTML = 
-            `<div id="${servicio.servicio}" class="album py-5 bg-light border border-primary">
+  arr.forEach((servicio) => {
+    if ($(`#${servicio.servicio}`).val() == undefined) {
+      contenedor = document.createElement("div");
+      contenedor.classList.add("col-4");
+      contenedor.style = "margin-bottom: 1vw;";
+      contenedor.innerHTML = `<div id="${servicio.servicio}" class="album py-5 bg-light border border-primary">
                 <div class="container-fluid">
                     <div class="row row-cols-12 row-cols-sm-12 row-cols-md-12 g-12">
                         <div class="col animacion">
@@ -52,49 +50,51 @@ export const servicioDiv = () => {
                     </div>
                 </div>
             </div>`;
-            divServicios.appendChild(contenedor);
-        }
+      divServicios.appendChild(contenedor);
+    }
+  });
+
+  $(".btn-servicio").on("click", function (e) {
+    e.preventDefault();
+    let servicios = JSON.parse(localStorage.getItem("servicios"));
+    let servicioName = `${$(this).attr("name")}`;
+    let results = servicios.filter(function (servicio) {
+      return servicio.servicio == servicioName;
     });
+    let result = results.length > 0 ? results[0] : null;
+    tiuloModalPagos.textContent = `Pagar ${result.servicio}`;
+    deudaModalPagos.textContent = `Total a pagar: ${result.monto} ( su pago puede ser parcial )`;
+    pagoModalPagos.value = result.monto;
+    btnPagar.value = `${$(this).attr("name")}`;
+    $("#modalPagos").modal();
+  });
 
-    $('.btn-servicio').on('click', function(e) {
-        e.preventDefault();
-        let servicios = JSON.parse(localStorage.getItem('servicios'));
-        let servicioName = `${$(this).attr('name')}`;
-        let results = servicios.filter(function (servicio) { return servicio.servicio == servicioName });
-        let result = (results.length > 0) ? results[0] : null;
-        tiuloModalPagos.textContent =`Pagar ${result.servicio}`;
-        deudaModalPagos.textContent =`Total a pagar: ${result.monto} ( su pago puede ser parcial )`;
-        pagoModalPagos.value = result.monto;
-        btnPagar.value = `${$(this).attr('name')}`;
-        $("#modalPagos").modal();
+  $(".btn-historial").on("click", function (e) {
+    e.preventDefault();
+    let servicioName = `${$(this).attr("name")}`;
+    historialServicios(servicioName);
+  });
+
+  $(".btn-edit").on("click", function (e) {
+    e.preventDefault();
+    let servicios = JSON.parse(localStorage.getItem("servicios"));
+    let servicioName = `${$(this).attr("name")}`;
+    let results = servicios.filter(function (servicio) {
+      return servicio.servicio == servicioName;
     });
+    let result = results.length > 0 ? results[0] : null;
+    btnedit.name = servicioName;
+    tiuloModalEdit.textContent = `Editar el servicio ${servicioName}`;
+    editName.value = result.servicio;
+    editSaldo.value = result.monto;
+    $("#modalEdit").modal();
+  });
 
-    $('.btn-historial').on('click', function(e) {
-        e.preventDefault();
-        let servicioName = `${$(this).attr('name')}`;
-        historialServicios(servicioName);
-    });
-
-    $('.btn-edit').on('click', function(e) {
-        e.preventDefault();
-        let servicios = JSON.parse(localStorage.getItem('servicios'));
-        let servicioName = `${$(this).attr('name')}`;
-        let results = servicios.filter(function (servicio) { return servicio.servicio == servicioName });
-        let result = (results.length > 0) ? results[0] : null;
-        btnedit.name = servicioName;
-        tiuloModalEdit.textContent = `Editar el servicio ${servicioName}`;
-        editName.value = result.servicio;
-        editSaldo.value = result.monto;
-        $("#modalEdit").modal();
-    });
-
-    $('.btn-borrar').on('click', function(e) {
-        e.preventDefault();
-        let servicioName = `${$(this).attr('name')}`;
-        btndelet.name = servicioName;
-        obtenerPokem();
-        $("#modalDelet").modal();
-
-    });
-
-}
+  $(".btn-borrar").on("click", function (e) {
+    e.preventDefault();
+    let servicioName = `${$(this).attr("name")}`;
+    btndelet.name = servicioName;
+    obtenerPokem();
+    $("#modalDelet").modal();
+  });
+};

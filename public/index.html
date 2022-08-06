@@ -23,6 +23,7 @@
 
     <title>Simulador de Gestion!</title>
   </head>
+
   <body id="body">
     <nav class="navbar navbar-expand-lg navbar-light bg-light">
       <button
@@ -57,13 +58,12 @@
             </a>
             <div class="dropdown-menu" aria-labelledby="navbarDropdown">
               <a id="servicios-p" class="dropdown-item" href="#">Servicios</a>
-              <a class="dropdown-item" href="#">Bancos</a>
               <div class="dropdown-divider"></div>
-              <a class="dropdown-item" href="#">Mi perfil</a>
+              <a class="dropdown-item" id="mi-perfil">Mi perfil</a>
             </div>
           </li>
           <li class="nav-item">
-            <a href="#" class="nav-link">salir</a>
+            <a id="salir" class="nav-link">salir</a>
           </li>
         </ul>
       </div>
@@ -361,15 +361,19 @@
       data-backdrop="static"
       data-keyboard="false"
       tabindex="-1"
-      aria-labelledby="staticBackdropLabel"
+      aria-labelledby="modalLoginLabel"
       aria-hidden="true"
     >
       <div class="modal-dialog">
         <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title" id="title-login"></h5>
+          </div>
           <div class="modal-body">
             <div class="input-group input-group-sm mb-3">
-              <h5 id="title-login"></h5>
-              <p id="descrp-login"></p>
+              <div class="input-group-prepend">
+                <span><p id="descrp-login"></p></span>
+              </div>
             </div>
 
             <div class="input-group input-group-sm mb-3">
@@ -378,18 +382,17 @@
               </div>
               <input id="nombre-user" class="form-control" />
             </div>
-
             <div class="input-group input-group-sm mb-3">
               <div class="input-group-prepend">
                 <span class="input-group-text">Contraseña:</span>
               </div>
-              <input id="pass-user" class="form-control" />
+              <input type="password" id="pass-user" class="form-control" />
             </div>
           </div>
 
           <div class="modal-footer">
-            <button id="login-btn" type="button" class="btn btn-primary">
-              Login
+            <button type="button" id="btn-login" class="btn btn-primary">
+              Understood
             </button>
           </div>
         </div>
