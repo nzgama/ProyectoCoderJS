@@ -7,6 +7,7 @@ let name = document.getElementById("nombre-user");
 let contraseña = document.getElementById("pass-user");
 let btnLogin = document.getElementById("btn-login");
 
+//cargar el modal de login
 export function login() {
   title.innerText = usuario.length > 0 ? `Bienvenido` : `Registro`;
 

@@ -1,6 +1,7 @@
 import { historialServicios } from "./historalServicios.js";
 import { obtenerPokem } from "../../app.js";
 
+//elmentos del modal pagos
 let tiuloModalPagos = document.querySelector("#modal-title-pago");
 let deudaModalPagos = document.querySelector("#deuda-modal");
 let pagoModalPagos = document.querySelector("#pago-modal");
@@ -11,6 +12,9 @@ let btnedit = document.getElementById("edit");
 let btndelet = document.getElementById("deleted");
 let btnPagar = document.getElementById("pagar");
 
+/************************************/
+/* Funcion agregar servicios al DOM */
+/************************************/
 export const servicioDiv = () => {
   let divServicios = document.getElementById("servicios");
   let arr = JSON.parse(localStorage.getItem("servicios"));
@@ -54,8 +58,12 @@ export const servicioDiv = () => {
     }
   });
 
+  /********************************/
+  /* modal para pagar el servicio */
+  /********************************/
   $(".btn-servicio").on("click", function (e) {
     e.preventDefault();
+    //actualizar valores del modal segun el servicio selecionado
     let servicios = JSON.parse(localStorage.getItem("servicios"));
     let servicioName = `${$(this).attr("name")}`;
     let results = servicios.filter(function (servicio) {
@@ -69,14 +77,22 @@ export const servicioDiv = () => {
     $("#modalPagos").modal();
   });
 
+  /*************************************/
+  /* modal para historial del servicio */
+  /*************************************/
   $(".btn-historial").on("click", function (e) {
     e.preventDefault();
+    //obtener servicio selecionado y llamar a la funcion historial
     let servicioName = `${$(this).attr("name")}`;
     historialServicios(servicioName);
   });
 
+  /*********************************/
+  /* modal para editar el servicio */
+  /*********************************/
   $(".btn-edit").on("click", function (e) {
     e.preventDefault();
+    //actualizar valores del modal segun el servicio selecionado
     let servicios = JSON.parse(localStorage.getItem("servicios"));
     let servicioName = `${$(this).attr("name")}`;
     let results = servicios.filter(function (servicio) {
@@ -90,10 +106,15 @@ export const servicioDiv = () => {
     $("#modalEdit").modal();
   });
 
+  /*********************************/
+  /* modal para borrar el servicio */
+  /*********************************/
   $(".btn-borrar").on("click", function (e) {
     e.preventDefault();
+    //actualizar valores del modal segun el servicio selecionado
     let servicioName = `${$(this).attr("name")}`;
     btndelet.name = servicioName;
+    //llamar a la API para la palabra de seguridad
     obtenerPokem();
     $("#modalDelet").modal();
   });

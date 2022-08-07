@@ -1,5 +1,8 @@
 import { banco } from "./operaciones.js";
 
+/********************************/
+/* Funcion agregar banco al DOM */
+/********************************/
 export const bancoDiv = () => {
   let saldoBanco = localStorage.saldoBanco
     ? localStorage.getItem("saldoBanco")
@@ -33,16 +36,20 @@ export const bancoDiv = () => {
     </div>`;
   divBanco.appendChild(contenedor);
 
+  //elmentos del modal banco
   let tiuloModalBanco = document.querySelector("#modal-title-banco");
   let bancoModal = document.querySelector("#banco-modal");
   let bancoSaldo = document.querySelector("#banco-saldo");
   let btnBanco = document.getElementById("banco-btn");
 
+  /*************************/
+  /* depositar en el banco */
+  /*************************/
   $("#btn_deposito").on("click", function (e) {
     let saldoBanco = localStorage.saldoBanco
       ? localStorage.getItem("saldoBanco")
       : Number(7000);
-    tiuloModalBanco.textContent = `Banco Desposito`;
+    tiuloModalBanco.textContent = `Banco Despositos`;
     bancoModal.textContent = `Saldo disponible: ${saldoBanco}`;
     bancoSaldo.value = 0;
     btnBanco.value = "Deposito";
@@ -50,6 +57,9 @@ export const bancoDiv = () => {
     $("#modalBanco").modal();
   });
 
+  /**************************/
+  /* extraccion en el banco */
+  /**************************/
   $("#btn_extraccion").on("click", function (e) {
     let saldoBanco = localStorage.saldoBanco
       ? localStorage.getItem("saldoBanco")
@@ -62,8 +72,13 @@ export const bancoDiv = () => {
     $("#modalBanco").modal();
   });
 
+  /*************************/
+  /* operacion en el banco */
+  /*************************/
   $("#banco-btn").on("click", function (e) {
+    //identificar extraccion o deposito
     let saldo = document.querySelector("#banco-saldo").value;
+    //llmar funcion para registrar la operacion
     banco(btnBanco.value, saldo);
   });
 };
